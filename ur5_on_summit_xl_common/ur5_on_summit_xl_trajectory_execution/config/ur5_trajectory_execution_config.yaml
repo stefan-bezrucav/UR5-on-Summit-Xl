@@ -1,0 +1,2 @@
+loop_rate: 10
+ur5_namespace: $(arg ur5_namespace)

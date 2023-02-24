@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- ***************** -->
+    <!-- Imported elements -->
+    <!-- ***************** -->
+
+    <!-- Import summit XLS base elements -->
+    <xacro:include filename="$(find summit_xl_description)/models/bases/summit_xl_hls_base.xacro"/>
+
+    <!-- Import summit XLS wheels -->
+    <xacro:include filename="$(find summit_xl_description)/models/wheels/omni_wheel.xacro"/>
+
+    <xacro:include filename="$(find summit_xl_description)/models/structures/structure_hokuyo.xacro"/>
+
+    <!-- Import IGMR sensors -->
+    <xacro:include filename="$(find sick_s300_description)/urdf/sick_s300.urdf.xacro" />
+
+    <xacro:property name="pi" value="3.1415926535897931"/>
+
+
+    <!-- Wheel parameters -->
+    <xacro:property name="wheel_offset_x" value="0.2225"/>    <!-- x,y,z in translation from base_link to the center of the wheel -->
+    <xacro:property name="wheel_offset_y" value="0.2045"/>
+    <xacro:property name="wheel_offset_z" value="0.0"/>
+
+    <xacro:property name="front_laser_offset_x" value="0.355"/>
+    <xacro:property name="front_laser_offset_y" value="-0.21"/>
+    <xacro:property name="front_laser_offset_z" value="0.2"/>
+
+    <xacro:property name="rear_laser_offset_x" value="-0.355"/>
+    <xacro:property name="rear_laser_offset_y" value="0.21"/>
+    <xacro:property name="rear_laser_offset_z" value="0.2"/>
+
+    <xacro:macro name="summit_xls_std" params="namespace publish_bf hq">
+        <!-- *************** -->
+        <!-- Robots Elements -->
+        <!-- *************** -->
+
+        <!-- BASE -->
+        <xacro:summit_xl_hls_base namespace="${namespace}" publish_bf="${publish_bf}" hq="${hq}"/>
+
+        <!-- Gazebo ros control pluggins -->
+        <xacro:ros_control/>
+
+        <!-- Gazebo omni steering plugin -->
+        <xacro:omni_steering prefix="${namespace}/" publish_tf="false"/>
+
+        <xacro:omni_wheel prefix="${namespace}/front_right" parent="${namespace}/base_link" reflect="false" hq="${hq}">
+            <origin xyz="${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:omni_wheel>
+
+        <xacro:omni_wheel prefix="${namespace}/front_left" parent="${namespace}/base_link" reflect="true" hq="${hq}">
+            <origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:omni_wheel>
+
+        <xacro:omni_wheel prefix="${namespace}/back_left" parent="${namespace}/base_link" reflect="true" hq="${hq}">
+            <origin xyz="-${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:omni_wheel>
+
+        <xacro:omni_wheel prefix="${namespace}/back_right" parent="${namespace}/base_link" reflect="false" hq="${hq}">
+            <origin xyz="-${wheel_offset_x} -${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 0"/>
+        </xacro:omni_wheel>
+
+        <xacro:sick_s300 ns="${namespace}" suffix="front_laser"
+                         scan_topic="scan" update_rate="10" samples="180"
+                         gazebo="true"
+                         parent_frame="${namespace}/base_link"
+                         min_intensity="95" max_intensity="105"
+                         min_angle="-0.495" max_angle="4.1" >
+          <origin xyz="${front_laser_offset_x} ${front_laser_offset_y} ${front_laser_offset_z}" rpy="0 0 -${10/12*pi}"/>
+        </xacro:sick_s300>
+
+        <xacro:sick_s300 ns="${namespace}" suffix="rear_laser"
+                         scan_topic="scan" update_rate="10" samples="180"
+                         gazebo="true"
+                         parent_frame="${namespace}/base_link"
+                         min_intensity="95" max_intensity="105"
+                         min_angle="-0.495" max_angle="4.1" >
+          <origin xyz="${rear_laser_offset_x} ${rear_laser_offset_y} ${rear_laser_offset_z}" rpy="0 0 ${1/6*pi}"/>
+        </xacro:sick_s300>
+
+    </xacro:macro>
+</robot>

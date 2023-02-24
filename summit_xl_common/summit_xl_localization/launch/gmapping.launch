@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="summit_namespace" default="summit_xl_1"/>
+  <arg name="scan_topic_without_namespace" default="sick_s300_front_laser/scan"/>
+  <arg name="scan_topic" default="$(arg summit_namespace)/$(arg scan_topic_without_namespace)"/>
+  <arg name="map_frame" default="$(arg summit_namespace)/map"/>
+  <arg name="odom_frame" default="$(arg summit_namespace)/odom"/>
+  <arg name="base_frame" default="$(arg summit_namespace)/base_link"/>
+
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
+    <remap from="scan" to ="$(arg scan_topic)"/>
+    <rosparam command="load" file="$(find summit_xl_localization)/config/gmapping.yaml" subst_value="true"/>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find summit_xl_localization)/config/gmapping.rviz" required="true" />
+
+</launch>

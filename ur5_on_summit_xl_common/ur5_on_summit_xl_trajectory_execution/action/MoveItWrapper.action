@@ -1,0 +1,8 @@
+# Define the goal
+float64[] joint_space_goal
+---
+# Define the result
+bool success
+---
+# Define a feedback message
+float32 percent_complete

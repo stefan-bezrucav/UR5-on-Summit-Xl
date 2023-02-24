@@ -1,0 +1,14 @@
+obstacle_range: 10.0
+raytrace_range: 10.0
+
+footprint: [[0.45, -0.25], [0.45, 0.25], [-0.45,0.25], [-0.45, -0.25]] #[[0.4, -0.20], [0.4, 0.2], [-0.4,0.2], [-0.4, -0.2]]
+
+publish_frequency: 1.0
+
+inflation_layer:
+  inflation_radius: 0.1
+
+obstacle_layer:
+  observation_sources: front_laser_scan rear_laser_scan
+  front_laser_scan: {sensor_frame: $(arg summit_namespace)/sick_s300_front_laser/base_link, data_type: LaserScan, topic: $(arg scan_topic_front_laser), marking: true, clearing: true}
+  rear_laser_scan: {sensor_frame: $(arg summit_namespace)/sick_s300_rear_laser/base_link, data_type: LaserScan, topic: $(arg scan_topic_rear_laser), marking: true, clearing: true}

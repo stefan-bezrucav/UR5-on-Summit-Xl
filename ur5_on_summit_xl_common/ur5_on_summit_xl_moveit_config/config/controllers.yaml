@@ -1,0 +1,11 @@
+controller_list:
+  - name: arm_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    joints:
+      - $(arg ur5_namespace)/shoulder_pan_joint
+      - $(arg ur5_namespace)/shoulder_lift_joint
+      - $(arg ur5_namespace)/elbow_joint
+      - $(arg ur5_namespace)/wrist_1_joint
+      - $(arg ur5_namespace)/wrist_2_joint
+      - $(arg ur5_namespace)/wrist_3_joint

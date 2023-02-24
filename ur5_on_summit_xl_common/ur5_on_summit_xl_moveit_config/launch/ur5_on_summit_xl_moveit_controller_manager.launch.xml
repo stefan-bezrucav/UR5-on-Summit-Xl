@@ -1,0 +1,8 @@
+<launch>
+  <arg name="ur5_namespace" default="ur5"/>
+
+  <rosparam file="$(find ur5_on_summit_xl_moveit_config)/config/controllers.yaml" subst_value="True"/>
+  <param name="use_controller_manager" value="false"/>
+  <param name="trajectory_execution/execution_duration_monitoring" value="false"/>
+  <param name="moveit_controller_manager" value="moveit_simple_controller_manager/MoveItSimpleControllerManager"/>
+</launch>

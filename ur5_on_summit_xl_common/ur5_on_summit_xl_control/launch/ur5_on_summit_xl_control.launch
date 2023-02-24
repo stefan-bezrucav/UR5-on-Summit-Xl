@@ -1,0 +1,9 @@
+<launch>
+  <arg name="summit_namespace" default="summit_xl"/>
+  <arg name="ur5_namespace" default="ur5"/>
+
+  <include file="$(find summit_xl_control)/launch/summit_xl_control.launch"/>
+  <include file="$(find ur5_control)/launch/ur5_control.launch">
+    <arg name="ur5_namespace" value="$(arg ur5_namespace)"/>
+  </include>
+</launch>

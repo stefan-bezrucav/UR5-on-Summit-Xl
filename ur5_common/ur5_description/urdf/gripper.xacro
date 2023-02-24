@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ros fake gripper plugin -->
+    <xacro:macro name="fake_gripper" params="ns robotGraspLink PosX PosY PosZ RotW RotX RotY RotZ">
+        <gazebo>
+            <plugin name="fake_gripper" filename="libfake_gripper_gazebo.so">
+              <robotNamespace>${ns}</robotNamespace>
+              <robotGraspLink>${robotGraspLink}</robotGraspLink>
+              <robotGraspPosePosX>${PosX}</robotGraspPosePosX>
+              <robotGraspPosePosY>${PosY}</robotGraspPosePosY>
+              <robotGraspPosePosZ>${PosZ}</robotGraspPosePosZ>
+              <robotGraspPoseRotW>${RotW}</robotGraspPoseRotW>
+              <robotGraspPoseRotX>${RotX}</robotGraspPoseRotX>
+              <robotGraspPoseRotY>${RotY}</robotGraspPoseRotY>
+              <robotGraspPoseRotZ>${RotZ}</robotGraspPoseRotZ>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+</robot>

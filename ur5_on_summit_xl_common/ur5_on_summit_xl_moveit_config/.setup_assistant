@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ur5_on_summit_xl_description
+    relative_path: robots/ur5_on_summit_xl.urdf.xacro
+  SRDF:
+    relative_path: config/ur5_on_summit_xl.srdf
+  CONFIG:
+    author_name: Stefan Bezrucav
+    author_email: bezrucav@igmr.rwth-aachen.de
+    generated_timestamp: 1556271871

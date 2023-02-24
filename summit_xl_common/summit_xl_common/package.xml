@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>summit_xl_common</name>
+  <version>0.0.0</version>
+  <description>The summit_xl_common package</description>
+
+  <!-- Author -->
+  <author email="bazooka@igmr.rwth-aachen.de">bazooka</author>
+  
+  <!-- Maintainer -->
+  <maintainer email="bazooka@igmr.rwth-aachen.de">bazooka</maintainer>
+  
+  <!-- License -->
+  <license>Copyright 2019 Institute of Mechanism Theory, Machine Dynamics and Robotics - RWTH Aachen University</license>
+  
+  <!-- Dependencies -->
+  
+  <!-- Because the metapackage CMakeLists.txt contains a catkin macro,
+   the buildtool dependency on catkin is required: -->
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!-- Metapackages only provide execution-time dependencies -->
+  <!-- <exec_depend>pkg_within_this_meta_pkg</exec_depend> -->
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Required for metapackages -->
+    <metapackage/>
+    <architecture_independent/>
+    
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

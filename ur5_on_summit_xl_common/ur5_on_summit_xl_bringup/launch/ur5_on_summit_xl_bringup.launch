@@ -1,0 +1,97 @@
+<launch>
+  <arg name="summit_namespace" default="summit_xl"/>
+  <arg name="ur5_namespace" default="ur5"/>
+
+  <arg name="control" default="false"/>
+  <arg name="localization" default="false"/>
+  <arg name="movebase" default="false"/>
+  <arg name="moveit" default="false"/>
+
+  <arg name="map_file" default="map/map1.yaml"/>
+
+  <arg name="pos_x" default="0.0" />
+  <arg name="pos_y" default="0.0" />
+  <arg name="pos_z" default="0.0" />
+  <arg name="rot_r" default="0.0" />
+  <arg name="rot_p" default="0.0" />
+  <arg name="rot_y" default="0.0" />
+
+  <group ns="$(arg summit_namespace)">
+    <!--param name="robot_description" command="$(find xacro)/xacro.py '$(find summit_xl_description)/robots/summit_xls_std.urdf.xacro' prefix:=$(arg summit_namespace)_ inorder" /-->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find ur5_on_summit_xl_description)/robots/ur5_on_summit_xl.robot'
+                                              summit_namespace:=$(arg summit_namespace)
+                                              ur5_namespace:=$(arg ur5_namespace)
+                                              --inorder" />
+
+    <!-- Publishes joint_states -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen">
+      <rosparam param="source_list" subst_value="true">[/$(arg summit_namespace)/joint_states, "/ur5/joint_states"]</rosparam>
+      <param name="/use_gui" value="false"/>
+    </node>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <remap from="/robot_description" to="robot_description"/>
+      <remap from="/joint_states" to="joint_states"/>
+    </node>
+
+    <node name="static_tf_map_summit_map" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0
+                                                                                         /map
+                                                                                         /$(arg summit_namespace)/map
+                                                                                         10" />
+
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -model $(arg summit_namespace) -param robot_description
+                -x $(arg pos_x) -y $(arg pos_y) -z $(arg pos_z)
+                -R $(arg rot_r) -P $(arg rot_p) -Y $(arg rot_y)"/>
+
+    <!-- Control -->
+    <group if="$(arg control)">
+        <include file="$(find ur5_on_summit_xl_control)/launch/ur5_on_summit_xl_control.launch">
+            <arg name="summit_namespace" value="$(arg summit_namespace)"/>
+            <arg name="ur5_namespace" value="$(arg ur5_namespace)"/>
+        </include>
+     </group>
+
+    <!-- Movebase -->
+    <group if="$(arg movebase)">
+        <include  file="$(find summit_xl_navigation)/launch/move_base.launch">
+            <arg name="summit_namespace" value="$(arg summit_namespace)"/>
+            <arg name="scan_topic_front_laser" value="/$(arg summit_namespace)/sick_s300_front_laser/scan"/>
+            <arg name="scan_topic_rear_laser" value="/$(arg summit_namespace)/sick_s300_rear_laser/scan"/>
+            <arg name="odom_topic" value="/$(arg summit_namespace)/odom"/>
+        </include>
+    </group>
+
+    <!-- Localization -->
+    <group if="$(arg localization)">
+        <include file="$(find summit_xl_localization)/launch/amcl.launch">
+            <arg name="summit_namespace" value="$(arg summit_namespace)"/>
+            <arg name="scan_topic" value="/$(arg summit_namespace)/sick_s300_front_laser/scan"/>
+            <arg name="x_init_pose" value="$(arg pos_x)" />
+            <arg name="y_init_pose" value="$(arg pos_y)" />
+            <arg name="z_init_pose" value="$(arg pos_z)" />
+            <arg name="yaw_init_pose" value="$(arg rot_y)" />
+        </include>
+
+        <!-- Run map server with desired map -->
+        <include file="$(find summit_xl_localization)/launch/map_server.launch">
+            <arg name="summit_namespace" value="$(arg summit_namespace)"/>
+            <arg name="map_file" value="$(arg map_file)"/>
+        </include>
+    </group>
+
+
+    <!-- Moveit -->
+    <group if="$(arg moveit)">
+        <include file="$(find ur5_on_summit_xl_moveit_config)/launch/move_group.launch">
+            <arg name="summit_namespace" value="$(arg summit_namespace)"/>
+            <arg name="ur5_namespace" value="$(arg ur5_namespace)"/>
+        </include>
+
+        <include file="$(find ur5_on_summit_xl_trajectory_execution)/launch/ur5_trajectory_execution.launch">
+            <arg name="ur5_namespace" value="$(arg ur5_namespace)"/>
+        </include>
+    </group>
+  </group>
+
+</launch>

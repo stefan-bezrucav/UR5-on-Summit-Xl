@@ -1,0 +1,8 @@
+<launch>
+    <arg name="ur5_namespace" default="ur5"/>
+
+    <node name="ur5_trajectory_execution" pkg="ur5_on_summit_xl_trajectory_execution" type="ur5_trajectory_execution" output="screen" respawn="false" >
+        <rosparam command="load" file="$(find ur5_on_summit_xl_trajectory_execution)/config/ur5_trajectory_execution_config.yaml" subst_value="True"/>
+    </node>
+
+</launch>
